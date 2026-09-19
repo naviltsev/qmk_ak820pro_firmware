@@ -28,9 +28,10 @@ extern void display_set_paused(bool paused);   // graphics/display.c
 #define LCD_OFF_X 1
 #define LCD_OFF_Y 2
 
-// GC9107 MADCTL. Rotation 270 = BGR(0x08) | MV(0x20) | MY(0x80) = 0xA8. The dashboard
-// and the animation share this orientation.
-#define MADCTL_270  0xA8
+// GC9107 MADCTL. Rotation 270 = BGR(0x08) | MV(0x20) | MX(0x40) = 0x68. The dashboard
+// and the animation share this orientation. (Panel came up 180 rotated with the MY
+// variant (0xA8); MX is the 180-flipped sibling in the same MV=1 rotation family.)
+#define MADCTL_270  0x68
 #define MADCTL_ANIM MADCTL_270
 
 // Animation slot. The header at ANIM_BASE is the stock format we reverse-engineered:
@@ -202,6 +203,7 @@ void lcd_init(void) {
         0xAB, 0, 1, 0x0E,
         0xA8, 0, 1, 0x19,           // frame rate
         0x3A, 0, 1, 0x05,           // pixel format: 16bpp RGB565
+        0x21, 0, 0,                 // display inversion ON (panel powers up non-inverted; this panel/panel type needs it on)
         0x11, 120, 0,               // sleep out
         0x29, 20, 0,                // display on
         0x36, 0, 1, MADCTL_270,     // memory access ctl: rotation 270
