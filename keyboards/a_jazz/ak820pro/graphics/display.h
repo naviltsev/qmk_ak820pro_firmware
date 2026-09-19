@@ -22,6 +22,12 @@ void display_toggle_media(void);
 void display_enter_sleep(void);
 void display_exit_sleep(void);
 
+// Full dashboard repaint (icons, date, status, clock/now-playing). Exposed so
+// a userspace panel takeover (e.g. an on-device settings menu) can hand the
+// screen back cleanly instead of leaving stock elements stuck showing stale
+// values until their underlying data happens to change next.
+uint32_t display_redraw_dashboard(uint32_t trigger_time, void *cb_arg);
+
 void display_draw_mac_logo(void);
 void display_draw_windows_logo(void);
 void display_draw_usb_logo(void);
