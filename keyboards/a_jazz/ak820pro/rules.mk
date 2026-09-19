@@ -33,6 +33,9 @@ else
     # qgf/qff asset blobs ourselves. Dashboard graphics live in EXTERNAL flash.
     SRC += graphics/lcd_bus.c
     SRC += graphics/display.c
+    # Spectator pixel-stream channel (0x13, doom-stream project). Built on
+    # lcd_blit_ram(), which the qp backend doesn't implement.
+    SRC += graphics/stream.c
 endif
 
 # CH582F wireless module exposed through QMK's official Bluetooth driver API.

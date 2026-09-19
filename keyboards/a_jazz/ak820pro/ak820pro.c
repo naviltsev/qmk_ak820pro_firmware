@@ -11,6 +11,7 @@
 #include "bluetooth/ch582f_ajazz.h"
 #include "rtc/rtc.h"
 #include "media/media.h"
+#include "graphics/stream.h"
 #include "raw_hid.h"
 #include "rgb_matrix.h"
 #include "usb_main.h"     // USB_DRIVER (USBD1), USB_SUSPENDED
@@ -427,6 +428,10 @@ void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
         media_hid_command(data, length);   // now-playing state (channel 0x12)
         return;
     }
+    if (length >= 2 && data[0] == RTC_SET_VALUE && data[1] == STREAM_CHANNEL) {
+        stream_hid_command(data, length);  // spectator pixel stream (channel 0x13)
+        return;
+    }
     data[0] = RTC_UNHANDLED;
 }
 
@@ -439,6 +444,8 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
         flash_command(data, length);
     } else if (length >= 2 && data[0] == RTC_SET_VALUE && data[1] == MEDIA_CHANNEL) {
         media_hid_command(data, length);   // now-playing state (channel 0x12)
+    } else if (length >= 2 && data[0] == RTC_SET_VALUE && data[1] == STREAM_CHANNEL) {
+        stream_hid_command(data, length);  // spectator pixel stream (channel 0x13)
     } else {
         data[0] = RTC_UNHANDLED;
     }
